@@ -7,8 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
+
 import org.mockito.MockitoAnnotations;
 import ru.akirakozov.sd.refactoring.Main;
+import ru.akirakozov.sd.refactoring.dao.ProductDAO;
 import ru.akirakozov.sd.refactoring.model.Product;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,21 +22,15 @@ import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.List;
 
-final class ProductServletTest extends AbstractServletTest {
+final class ProductServletTest {
 
-    private static final String OK_STATUS = "OK";
+    private final static String SEPARATOR = System.lineSeparator();
 
-    private final static String BODY_TAG = "<html><body>" + SEPARATOR;
+    private final static String COMMAND_PARAMETER = "command";
 
-    private final static String COLLAPSE_BODY_TAG = "</body></html>";
+    private final static String DATABASE_URL = "jdbc:sqlite:testing.db";
 
-    private final static String SUM_PRICE_HEADER = "Summary price: " + SEPARATOR;
-
-    private final static String COUNT_PRICE_HEADER = "Number of products: " + SEPARATOR;
-
-    private final static String MAX_PRICE_HEADER = "<h1>Product with max price: </h1>" + SEPARATOR;
-
-    private final static String MIN_PRICE_HEADER = "<h1>Product with min price: </h1>" + SEPARATOR;
+    private final static String OK_STATUS = "OK";
 
     private final static String MAX_COMMAND = "max";
 
@@ -49,6 +45,8 @@ final class ProductServletTest extends AbstractServletTest {
 
     @Mock
     private HttpServletResponse response;
+
+    private final static ProductDAO productDAO = new ProductDAO(DATABASE_URL);
 
     private static Thread serverThread;
 
@@ -74,12 +72,12 @@ final class ProductServletTest extends AbstractServletTest {
     @BeforeEach
     void initMocks() throws SQLException {
         MockitoAnnotations.openMocks(this);
-        init();
+        productDAO.init();
     }
 
     @AfterEach
     void clearAll() throws SQLException {
-        clear();
+        productDAO.clear();
     }
 
     @Test
@@ -107,7 +105,7 @@ final class ProductServletTest extends AbstractServletTest {
         writer.flush();
         assertEquals(OK_STATUS, stringWriter.toString().trim());
 
-        final List<Product> allProducts = getAll();
+        final List<Product> allProducts = productDAO.getAll();
         assertTrue(allProducts.contains(new Product("Xiaomi", 200)));
     }
 
@@ -122,7 +120,7 @@ final class ProductServletTest extends AbstractServletTest {
         new GetProductsServlet(DATABASE_URL).doGet(request, response);
         writer.flush();
 
-        final List<Product> allProducts = getAll();
+        final List<Product> allProducts = productDAO.getAll();
         assertGetResponse(stringWriter.toString().trim(), toHtml(allProducts));
     }
 
@@ -254,8 +252,8 @@ final class ProductServletTest extends AbstractServletTest {
     }
 
     private void fill() throws SQLException {
-        add(new Product("Pixel6", 500));
-        add(new Product("Xiaomi", 100));
-        add(new Product("Honor", 300));
+        productDAO.add(new Product("Pixel6", 500));
+        productDAO.add(new Product("Xiaomi", 100));
+        productDAO.add(new Product("Honor", 300));
     }
 }

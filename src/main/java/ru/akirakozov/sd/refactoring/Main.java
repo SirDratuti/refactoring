@@ -40,7 +40,7 @@ public class Main {
         server.start();
         server.join();
     }
-    private static String getUrl(String[] args) {
+    private static String getUrl(final String[] args) {
         if (args.length == 0) {
             return "jdbc:sqlite:test.db";
         } else {

@@ -4,7 +4,7 @@ final public class Product {
     private final String name;
     private final int price;
 
-    public Product(String name, int price) {
+    public Product(final String name, final int price) {
         this.name = name;
         this.price = price;
     }
@@ -18,7 +18,7 @@ final public class Product {
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(final Object other) {
         if (other instanceof Product) {
             Product otherProduct = (Product) other;
             return otherProduct.name.equals(this.name) &&

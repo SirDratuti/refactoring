@@ -2,49 +2,31 @@ package ru.akirakozov.sd.refactoring.servlet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 
 /**
  * @author akirakozov
  */
-public class GetProductsServlet extends BaseServlet {
+public final class GetProductsServlet extends BaseServlet {
 
     public GetProductsServlet() {
         super();
     }
 
-    public GetProductsServlet(String databaseUrl) {
+    public GetProductsServlet(final String databaseUrl) {
         super(databaseUrl);
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(
+            final HttpServletRequest request,
+            final HttpServletResponse response
+    ) {
         try {
-            try (Connection c = DriverManager.getConnection(databaseUrl)) {
-                Statement stmt = c.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM PRODUCT");
-                response.getWriter().println("<html><body>");
-
-                while (rs.next()) {
-                    String name = rs.getString("name");
-                    int price = rs.getInt("price");
-                    response.getWriter().println(name + "\t" + price + "</br>");
-                }
-                response.getWriter().println("</body></html>");
-
-                rs.close();
-                stmt.close();
-            }
-
+            final String queryResult = productDAO.getAll();
+            response.getWriter().println(queryResult);
+            setContentType(response);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        response.setContentType("text/html");
-        response.setStatus(HttpServletResponse.SC_OK);
     }
 }
