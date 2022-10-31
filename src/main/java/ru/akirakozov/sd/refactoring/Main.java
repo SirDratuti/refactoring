@@ -16,7 +16,7 @@ import java.sql.Statement;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        try (Connection c = DriverManager.getConnection("jdbc:sqlite:test.db")) {
+        try (Connection c = DriverManager.getConnection(getUrl(args))) {
             String sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
                     "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                     " NAME           TEXT    NOT NULL, " +
@@ -34,10 +34,20 @@ public class Main {
         server.setHandler(context);
 
         context.addServlet(new ServletHolder(new AddProductServlet()), "/add-product");
-        context.addServlet(new ServletHolder(new GetProductsServlet()),"/get-products");
-        context.addServlet(new ServletHolder(new QueryServlet()),"/query");
+        context.addServlet(new ServletHolder(new GetProductsServlet()), "/get-products");
+        context.addServlet(new ServletHolder(new QueryServlet()), "/query");
 
         server.start();
         server.join();
     }
+    private static String getUrl(String[] args) {
+        if (args.length == 0) {
+            return "jdbc:sqlite:test.db";
+        } else {
+            return args[0];
+        }
+    }
 }
+
+// http://localhost:8081/add-product?name=iphone6&price=300
+// http://localhost:8081/get-products

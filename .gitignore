@@ -1,2 +1,5 @@
 /.idea/
 /refactoring.iml
+/target/*
+test.db
+testing.db
