@@ -9,11 +9,11 @@ public class QueryMapper {
 
     public final static String PRICE_PARAMETER = "price";
 
-    private final static String SEPARATOR = System.lineSeparator();
+    public final static String SEPARATOR = System.lineSeparator();
 
-    private final static String BODY_TAG = "<html><body>" + SEPARATOR;
+    public final static String BODY_TAG = "<html><body>" + SEPARATOR;
 
-    private final static String COLLAPSE_BODY_TAG = "</body></html>";
+    public final static String COLLAPSE_BODY_TAG = "</body></html>";
 
     public final static String SUM_PRICE_HEADER = "Summary price: " + SEPARATOR;
 

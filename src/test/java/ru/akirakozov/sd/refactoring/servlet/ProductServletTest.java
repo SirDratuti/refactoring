@@ -4,8 +4,8 @@ import org.junit.jupiter.api.*;
 import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
+import static ru.akirakozov.sd.refactoring.dao.QueryMapper.*;
 
 
 import org.mockito.MockitoAnnotations;
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
-import java.util.List;
 
 final class ProductServletTest {
 
@@ -105,8 +104,8 @@ final class ProductServletTest {
         writer.flush();
         assertEquals(OK_STATUS, stringWriter.toString().trim());
 
-        final List<Product> allProducts = productDAO.getAll();
-        assertTrue(allProducts.contains(new Product("Xiaomi", 200)));
+        final String allProducts = productDAO.getAll();
+        assertGetQuery(allProducts, toHtml(new Product("Xiaomi", 200)));
     }
 
     @Test
@@ -120,8 +119,8 @@ final class ProductServletTest {
         new GetProductsServlet(DATABASE_URL).doGet(request, response);
         writer.flush();
 
-        final List<Product> allProducts = productDAO.getAll();
-        assertGetResponse(stringWriter.toString().trim(), toHtml(allProducts));
+        final String allProducts = productDAO.getAll();
+        assertEquals(stringWriter.toString().trim(), allProducts);
     }
 
     @Test
@@ -189,19 +188,18 @@ final class ProductServletTest {
     }
 
     private String toPrice(final int price) {
-        return price + SEPARATOR;
+        return String.valueOf(price);
     }
 
     private String toHtml(final Product product) {
         return product.getName() + "\t" + product.getPrice() + "</br>" + SEPARATOR;
     }
 
-    private String toHtml(final List<Product> allProducts) {
-        final StringBuilder builder = new StringBuilder();
-        for (Product product : allProducts) {
-            builder.append(toHtml(product));
-        }
-        return builder.toString();
+    private void assertGetQuery(final String result, final String expected) {
+        assertEquals(
+                result,
+                BODY_TAG + expected + COLLAPSE_BODY_TAG
+        );
     }
 
     private void assertSumQuery(final String result, final String expected) {
@@ -230,12 +228,6 @@ final class ProductServletTest {
                 result,
                 BODY_TAG + MAX_PRICE_HEADER + expected + COLLAPSE_BODY_TAG
         );
-    }
-
-    private void assertGetResponse(final String result, final String expected) {
-        assertEquals(
-                result,
-                BODY_TAG + expected + COLLAPSE_BODY_TAG);
     }
 
     private void initAddRequest() {
