@@ -3,10 +3,14 @@ package ru.akirakozov.sd.refactoring.servlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static ru.akirakozov.sd.refactoring.commands.Commands.*;
+
 /**
  * @author akirakozov
  */
 public class QueryServlet extends BaseServlet {
+
+    public static final String PATH_SPEC = "/query";
 
     public QueryServlet() {
         super();
@@ -25,16 +29,16 @@ public class QueryServlet extends BaseServlet {
         final String queryResult;
         try {
             switch (command) {
-                case "max":
+                case MAX_COMMAND:
                     queryResult = productDAO.getMax();
                     break;
-                case "min":
+                case MIN_COMMAND:
                     queryResult = productDAO.getMin();
                     break;
-                case "sum":
+                case SUM_COMMAND:
                     queryResult = productDAO.getSum();
                     break;
-                case "count":
+                case COUNT_COMMAND:
                     queryResult = productDAO.getCount();
                     break;
                 default:

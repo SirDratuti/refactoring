@@ -20,7 +20,7 @@ final public class Product {
     @Override
     public boolean equals(final Object other) {
         if (other instanceof Product) {
-            Product otherProduct = (Product) other;
+            final Product otherProduct = (Product) other;
             return otherProduct.name.equals(this.name) &&
                     otherProduct.price == this.price;
         }

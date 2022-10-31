@@ -5,9 +5,9 @@ import ru.akirakozov.sd.refactoring.dao.ProductDAO;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 
-abstract class BaseServlet extends HttpServlet {
+public abstract class BaseServlet extends HttpServlet {
 
-    protected final static String DEFAULT_DATABASE_URL = "jdbc:sqlite:test.db";
+    public final static String DEFAULT_DATABASE_URL = "jdbc:sqlite:test.db";
 
     protected final String databaseUrl;
 

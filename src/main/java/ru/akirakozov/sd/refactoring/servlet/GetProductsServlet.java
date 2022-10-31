@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public final class GetProductsServlet extends BaseServlet {
 
+    public static final String PATH_SPEC = "/get-product";
+
     public GetProductsServlet() {
         super();
     }

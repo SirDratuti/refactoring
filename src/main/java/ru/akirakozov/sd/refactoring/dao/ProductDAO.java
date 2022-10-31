@@ -1,5 +1,6 @@
 package ru.akirakozov.sd.refactoring.dao;
 
+import ru.akirakozov.sd.refactoring.html.HTMLConstants;
 import ru.akirakozov.sd.refactoring.model.Product;
 
 import java.sql.*;
@@ -48,19 +49,19 @@ final public class ProductDAO {
     }
 
     public String getMax() throws SQLException {
-        return query(MAX_QUERY, QueryMapper.MAX_PRICE_HEADER, QueryMapper::mapToList);
+        return query(MAX_QUERY, HTMLConstants.MAX_PRICE_HEADER, QueryMapper::mapToList);
     }
 
     public String getMin() throws SQLException {
-        return query(MIN_QUERY, QueryMapper.MIN_PRICE_HEADER, QueryMapper::mapToList);
+        return query(MIN_QUERY, HTMLConstants.MIN_PRICE_HEADER, QueryMapper::mapToList);
     }
 
     public String getSum() throws SQLException {
-        return query(SUM_QUERY, QueryMapper.SUM_PRICE_HEADER, QueryMapper::mapToInteger);
+        return query(SUM_QUERY, HTMLConstants.SUM_PRICE_HEADER, QueryMapper::mapToInteger);
     }
 
     public String getCount() throws SQLException {
-        return query(COUNT_QUERY, QueryMapper.COUNT_PRICE_HEADER, QueryMapper::mapToInteger);
+        return query(COUNT_QUERY, HTMLConstants.COUNT_PRICE_HEADER, QueryMapper::mapToInteger);
     }
 
     private String toSQL(final Product product) {

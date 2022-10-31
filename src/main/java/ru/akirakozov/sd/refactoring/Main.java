@@ -3,51 +3,42 @@ package ru.akirakozov.sd.refactoring;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import ru.akirakozov.sd.refactoring.dao.ProductDAO;
 import ru.akirakozov.sd.refactoring.servlet.AddProductServlet;
+import ru.akirakozov.sd.refactoring.servlet.BaseServlet;
 import ru.akirakozov.sd.refactoring.servlet.GetProductsServlet;
 import ru.akirakozov.sd.refactoring.servlet.QueryServlet;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 
 /**
  * @author akirakozov
  */
 public class Main {
-    public static void main(String[] args) throws Exception {
-        try (Connection c = DriverManager.getConnection(getUrl(args))) {
-            String sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
-                    "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    " NAME           TEXT    NOT NULL, " +
-                    " PRICE          INT     NOT NULL)";
-            Statement stmt = c.createStatement();
 
-            stmt.executeUpdate(sql);
-            stmt.close();
-        }
+    private static final int DEFAULT_PORT = 8081;
 
-        Server server = new Server(8081);
+    public static void main(final String[] args) throws Exception {
+        final ProductDAO productDAO = new ProductDAO(getUrl(args));
+        productDAO.init();
+
+        Server server = new Server(DEFAULT_PORT);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
 
-        context.addServlet(new ServletHolder(new AddProductServlet()), "/add-product");
-        context.addServlet(new ServletHolder(new GetProductsServlet()), "/get-products");
-        context.addServlet(new ServletHolder(new QueryServlet()), "/query");
+        context.addServlet(new ServletHolder(new AddProductServlet()), AddProductServlet.PATH_SPEC);
+        context.addServlet(new ServletHolder(new GetProductsServlet()), GetProductsServlet.PATH_SPEC);
+        context.addServlet(new ServletHolder(new QueryServlet()), QueryServlet.PATH_SPEC);
 
         server.start();
         server.join();
     }
+
     private static String getUrl(final String[] args) {
         if (args.length == 0) {
-            return "jdbc:sqlite:test.db";
+            return BaseServlet.DEFAULT_DATABASE_URL;
         } else {
             return args[0];
         }
     }
 }
-
-// http://localhost:8081/add-product?name=iphone6&price=300
-// http://localhost:8081/get-products

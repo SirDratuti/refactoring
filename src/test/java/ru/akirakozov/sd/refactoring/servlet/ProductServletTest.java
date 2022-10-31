@@ -5,7 +5,9 @@ import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+import static ru.akirakozov.sd.refactoring.commands.Commands.*;
 import static ru.akirakozov.sd.refactoring.dao.QueryMapper.*;
+import static ru.akirakozov.sd.refactoring.html.HTMLConstants.*;
 
 
 import org.mockito.MockitoAnnotations;
@@ -30,14 +32,6 @@ final class ProductServletTest {
     private final static String DATABASE_URL = "jdbc:sqlite:testing.db";
 
     private final static String OK_STATUS = "OK";
-
-    private final static String MAX_COMMAND = "max";
-
-    private final static String MIN_COMMAND = "min";
-
-    private final static String SUM_COMMAND = "sum";
-
-    private final static String COUNT_COMMAND = "count";
 
     @Mock
     private HttpServletRequest request;
